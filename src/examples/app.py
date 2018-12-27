@@ -33,7 +33,7 @@ class RipeIdApp(appier.WebApp):
         access_token = api.oauth_access(code)
         self.session["rid.access_token"] = access_token
         return self.redirect(
-            self.url_for("google.index")
+            self.url_for("ripe_id.index")
         )
 
     @appier.exception_handler(appier.OAuthAccessError)
