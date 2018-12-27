@@ -12,8 +12,8 @@ SCOPE = (
 
 def get_api():
     return ripe_id.API(
-        client_id = appier.conf("RIPE_ID_ID"),
-        client_secret = appier.conf("RIPE_ID_SECRET"),
-        redirect_url = appier.conf("RIPE_ID_REDIRECT_URL"),
+        client_id = appier.conf("RIPEID_ID"),
+        client_secret = appier.conf("RIPEID_SECRET"),
+        redirect_url = appier.conf("RIPEID_REDIRECT_URL"),
         scope = SCOPE
     )
