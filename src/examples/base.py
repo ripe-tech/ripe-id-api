@@ -5,8 +5,15 @@ import appier
 
 import ripe
 
+SCOPE = (
+    "email",
+    "acl"
+)
+
 def get_api():
     return ripe.API(
-        username = appier.conf("RIPE_ID_USERNAME"),
-        password = appier.conf("RIPE_ID_PASSWORD")
+        client_id = appier.conf("RIPE_ID_ID"),
+        client_secret = appier.conf("RIPE_ID_SECRET"),
+        redirect_url = appier.conf("RIPE_ID_REDIRECT_URL"),
+        scope = SCOPE
     )
