@@ -7,15 +7,21 @@ RIPEID_BASE_URL = "https://id.platforme.com/api/"
 """ The default base URL to be used when no other
 base URL value is provided to the constructor """
 
+RIPEID_LOGIN_URL = "https://id.platforme.com/"
+""" The default login URL to be used when no other
+base URL value is provided to the constructor """
+
 class API(appier.OAuth2API):
 
     def __init__(self, *args, **kwargs):
-        appier.API.__init__(self, *args, **kwargs)
+        appier.OAuth2API.__init__(self, *args, **kwargs)
         self.base_url = appier.conf("RIPEID_BASE_URL", RIPEID_BASE_URL)
+        self.login_url = appier.conf("RIPEID_LOGIN_URL", RIPEID_LOGIN_URL)
         self.client_id = appier.conf("RIPEID_ID", None)
         self.client_secret = appier.conf("RIPEID_SECRET", None)
         self.redirect_url = appier.conf("RIPEID_REDIRECT_URL", None)
         self.base_url = kwargs.get("base_url", self.base_url)
+        self.login_url = kwargs.get("login_url", self.login_url)
         self.client_id = kwargs.get("client_id", self.client_id)
         self.client_secret = kwargs.get("client_secret", self.client_secret)
         self.redirect_url = kwargs.get("redirect_url", self.redirect_url)

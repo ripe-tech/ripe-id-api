@@ -44,7 +44,7 @@ class RipeIdApp(appier.WebApp):
         )
 
     def ensure_api(self):
-        access_token = self.session.get("ff.access_token", None)
+        access_token = self.session.get("rid.access_token", None)
         if access_token: return
         api = base.get_api()
         return api.oauth_authorize()
