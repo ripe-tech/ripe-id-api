@@ -1,2 +1,3 @@
-# ripe-id-api
-Simple Python API client for RIPE ID
+# RIPE ID API
+
+Simple Python API client for RIPE ID.
