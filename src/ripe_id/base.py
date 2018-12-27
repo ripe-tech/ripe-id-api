@@ -14,7 +14,7 @@ class API(appier.OAuth2API):
         self.base_url = appier.conf("RIPEID_BASE_URL", RIPEID_BASE_URL)
         self.client_id = appier.conf("RIPEID_ID", None)
         self.client_secret = appier.conf("RIPEID_SECRET", None)
-        self.redirect_url = appier.conf("REPID_REDIRECT_URL", None)
+        self.redirect_url = appier.conf("RIPEID_REDIRECT_URL", None)
         self.base_url = kwargs.get("base_url", self.base_url)
         self.client_id = kwargs.get("client_id", self.client_id)
         self.client_secret = kwargs.get("client_secret", self.client_secret)
