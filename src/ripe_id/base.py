@@ -15,6 +15,7 @@ base URL value is provided to the constructor """
 
 SCOPE = (
     "account.me",
+    "account.acl"
 )
 """ The list of permissions to be used to create the
 scope string for the oauth value """
