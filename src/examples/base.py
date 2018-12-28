@@ -7,7 +7,8 @@ import ripe_id
 
 SCOPE = (
     "acl",
-    "email"
+    "email",
+    "account.me"
 )
 
 def get_api():
