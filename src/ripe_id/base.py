@@ -136,7 +136,7 @@ class API(
 
     def oauth_login(self):
         url = self.login_url + "oauth2/login"
-        contents = self.post(url, token = True, auth = False)
+        contents = self.post(url, callback = False, token = True, auth = False)
         self.session_id = contents.get("session_id", None)
         self.tokens = contents.get("tokens", None)
         self.trigger("auth", contents)
