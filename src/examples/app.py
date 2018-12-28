@@ -39,6 +39,7 @@ class RipeIdApp(appier.WebApp):
     @appier.exception_handler(appier.OAuthAccessError)
     def oauth_error(self, error):
         if "rid.access_token" in self.session: del self.session["rid.access_token"]
+        if "rid.session_id" in self.session: del self.session["rid.session_id"]
         return self.redirect(
             self.url_for("ripe_id.index")
         )
@@ -51,9 +52,17 @@ class RipeIdApp(appier.WebApp):
 
     def get_api(self):
         access_token = self.session and self.session.get("rid.access_token", None)
+        session_id = self.session and self.session.get("rid.session_id", None)
         api = base.get_api()
         api.access_token = access_token
+        api.session_id = session_id
+        api.bind("auth", self.on_auth)
         return api
+
+    def on_auth(self, contents):
+        if not self.session: return
+        session_id = contents.get("session_id", None)
+        self.session["rid.session_id"] = session_id
 
 if __name__ == "__main__":
     app = RipeIdApp()
