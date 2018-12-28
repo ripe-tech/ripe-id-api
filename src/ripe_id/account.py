@@ -7,3 +7,8 @@ class AccountAPI(object):
         url = self.base_url + "accounts/me"
         contents = self.get(url)
         return contents
+
+    def acl_account(self):
+        url = self.base_url + "accounts/acl"
+        contents = self.get(url)
+        return contents
