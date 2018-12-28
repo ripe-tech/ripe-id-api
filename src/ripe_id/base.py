@@ -3,6 +3,8 @@
 
 import appier
 
+from . import account
+
 RIPEID_BASE_URL = "https://id.platforme.com/api/"
 """ The default base URL to be used when no other
 base URL value is provided to the constructor """
@@ -11,7 +13,10 @@ RIPEID_LOGIN_URL = "https://id.platforme.com/"
 """ The default login URL to be used when no other
 base URL value is provided to the constructor """
 
-class API(appier.OAuth2API):
+class API(
+    appier.OAuth2API,
+    account.AccountAPI
+):
 
     def __init__(self, *args, **kwargs):
         appier.OAuth2API.__init__(self, *args, **kwargs)
@@ -30,11 +35,45 @@ class API(appier.OAuth2API):
         self.refresh_token = kwargs.get("refresh_token", None)
         self.session_id = kwargs.get("session_id", None)
 
+    def build(
+        self,
+        method,
+        url,
+        data = None,
+        data_j = None,
+        data_m = None,
+        headers = None,
+        params = None,
+        mime = None,
+        kwargs = None
+    ):
+        appier.OAuth2API.build(
+            self,
+            method,
+            url,
+            data = data,
+            data_j = data_j,
+            data_m = data_m,
+            headers = headers,
+            params = params,
+            mime = mime,
+            kwargs = kwargs
+        )
+        auth = kwargs.pop("auth", True)
+        if auth: params["sid"] = self.get_session_id()
+
+    def get_session_id(self):
+        if self.session_id: return self.session_id
+        return self.oauth_login()
+
     def auth_callback(self, params, headers):
-        if not self.refresh_token: return
-        self.oauth_refresh()
-        params["access_token"] = self.get_access_token()
-        headers["Authorization"] = "Bearer %s" % self.get_access_token()
+        if self.refresh_token:
+            self.oauth_refresh()
+            params["access_token"] = self.get_access_token()
+        if self.session_id:
+            self.session_id = None
+            session_id = self.get_session_id()
+            params["session_id"] = session_id
 
     def oauth_authorize(self, state = None, access_type = None, approval_prompt = True):
         url = self.login_url + "oauth2/auth"
@@ -56,6 +95,7 @@ class API(appier.OAuth2API):
         contents = self.post(
             url,
             token = False,
+            auth = False,
             client_id = self.client_id,
             client_secret = self.client_secret,
             grant_type = "authorization_code",
@@ -74,6 +114,7 @@ class API(appier.OAuth2API):
             url,
             callback = False,
             token = False,
+            auth = False,
             client_id = self.client_id,
             client_secret = self.client_secret,
             grant_type = "refresh_token",
@@ -83,3 +124,15 @@ class API(appier.OAuth2API):
         self.access_token = contents["access_token"]
         self.trigger("access_token", self.access_token)
         return self.access_token
+
+    def oauth_login(self):
+        url = self.login_url + "oauth2/login"
+        contents = self.post(url, auth = False)
+        self.session_id = contents.get("session_id", None)
+        self.tokens = contents.get("tokens", None)
+        self.trigger("auth", contents)
+        return self.session_id
+
+    @property
+    def oauth_types(self):
+        return ("param",)

@@ -23,8 +23,8 @@ class RipeIdApp(appier.WebApp):
         url = self.ensure_api()
         if url: return self.redirect(url)
         api = self.get_api()
-        user = api.self_user()
-        return user
+        account = api.self_account()
+        return account
 
     @appier.route("/oauth", "GET")
     def oauth(self):
