@@ -79,7 +79,7 @@ class API(
         if self.session_id:
             self.session_id = None
             session_id = self.get_session_id()
-            params["session_id"] = session_id
+            params["sid"] = session_id
 
     def oauth_authorize(self, state = None):
         url = self.login_url + "oauth2/auth"
@@ -136,7 +136,7 @@ class API(
 
     def oauth_login(self):
         url = self.login_url + "oauth2/login"
-        contents = self.post(url, auth = False)
+        contents = self.post(url, token = True, auth = False)
         self.session_id = contents.get("session_id", None)
         self.tokens = contents.get("tokens", None)
         self.trigger("auth", contents)
@@ -145,3 +145,7 @@ class API(
     @property
     def oauth_types(self):
         return ("param",)
+
+    @property
+    def token_default(self):
+        return False
