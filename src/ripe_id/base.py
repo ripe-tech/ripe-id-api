@@ -81,8 +81,13 @@ class API(
             session_id = self.get_session_id()
             params["session_id"] = session_id
 
-    def oauth_authorize(self, state = None, access_type = None, approval_prompt = True):
+    def oauth_authorize(self, state = None):
         url = self.login_url + "oauth2/auth"
+        appier.verify_many((
+            self.client_id,
+            self.redirect_url,
+            self.scope
+        ))
         values = dict(
             client_id = self.client_id,
             redirect_uri = self.redirect_url,
@@ -90,8 +95,6 @@ class API(
             scope = " ".join(self.scope)
         )
         if state: values["state"] = state
-        if access_type: values["access_type"] = access_type
-        if approval_prompt: values["approval_prompt"] = "force"
         data = appier.legacy.urlencode(values)
         url = url + "?" + data
         return url
