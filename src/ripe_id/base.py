@@ -13,6 +13,12 @@ RIPEID_LOGIN_URL = "https://id.platforme.com/"
 """ The default login URL to be used when no other
 base URL value is provided to the constructor """
 
+SCOPE = (
+    "account.me",
+)
+""" The list of permissions to be used to create the
+scope string for the oauth value """
+
 class API(
     appier.OAuth2API,
     account.AccountAPI
@@ -30,7 +36,7 @@ class API(
         self.client_id = kwargs.get("client_id", self.client_id)
         self.client_secret = kwargs.get("client_secret", self.client_secret)
         self.redirect_url = kwargs.get("redirect_url", self.redirect_url)
-        self.scope = kwargs.get("scope", None)
+        self.scope = kwargs.get("scope", SCOPE)
         self.access_token = kwargs.get("access_token", None)
         self.refresh_token = kwargs.get("refresh_token", None)
         self.session_id = kwargs.get("session_id", None)
