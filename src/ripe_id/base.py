@@ -3,6 +3,7 @@
 
 import appier
 
+from . import token
 from . import account
 
 RIPEID_BASE_URL = "https://id.platforme.com/api/"
@@ -22,6 +23,7 @@ scope string for the oauth value """
 
 class API(
     appier.OAuth2API,
+    token.TokenAPI,
     account.AccountAPI
 ):
 

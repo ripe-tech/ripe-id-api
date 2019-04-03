@@ -26,6 +26,23 @@ class RipeIdApp(appier.WebApp):
         account = api.self_account()
         return account
 
+    @appier.route("/tokens/issue", "GET")
+    def token_issue(self):
+        url = self.ensure_api()
+        if url: return self.redirect(url)
+        api = self.get_api()
+        token = api.issue_token()
+        return token
+
+    @appier.route("/tokens/<str:token>/redeem", "GET")
+    def token_redeem(self):
+        url = self.ensure_api()
+        if url: return self.redirect(url)
+        token = self.field("token", mandatory = True)
+        api = self.get_api()
+        token = api.redeem_token(token)
+        return token
+
     @appier.route("/logout", "GET")
     def logout(self):
         return self.oauth_error(None)
