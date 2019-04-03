@@ -10,5 +10,10 @@ class TokenAPI(object):
 
     def redeem_token(self, token):
         url = self.base_url + "tokens/redeem"
-        contents = self.post(url, token = token)
+        contents = self.post(
+            url,
+            params = dict(token = token),
+            token = False,
+            auth = False
+        )
         return contents

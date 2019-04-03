@@ -35,10 +35,7 @@ class RipeIdApp(appier.WebApp):
         return token
 
     @appier.route("/tokens/<str:token>/redeem", "GET")
-    def token_redeem(self):
-        url = self.ensure_api()
-        if url: return self.redirect(url)
-        token = self.field("token", mandatory = True)
+    def token_redeem(self, token):
         api = self.get_api()
         token = api.redeem_token(token)
         return token
