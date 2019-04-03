@@ -9,6 +9,6 @@ class TokenAPI(object):
         return contents
 
     def redeem_token(self, token):
-        url = self.base_url + "tokens/%s/redeem" % token
-        contents = self.post(url)
+        url = self.base_url + "tokens/redeem"
+        contents = self.post(url, token = token)
         return contents
