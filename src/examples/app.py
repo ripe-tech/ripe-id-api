@@ -18,6 +18,20 @@ class RipeIdApp(appier.WebApp):
     def index(self):
         return self.me()
 
+    @appier.route("/ping", "GET")
+    def ping(self):
+        api = self.get_api()
+        result = api.ping()
+        return result
+
+    @appier.route("/login", "GET")
+    def login(self):
+        username = self.field("username")
+        password = self.field("password")
+        api = self.get_api()
+        result = api.login(username, password)
+        return result
+
     @appier.route("/me", "GET")
     def me(self):
         url = self.ensure_api()

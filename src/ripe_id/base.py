@@ -145,6 +145,23 @@ class API(
         self.trigger("auth", contents)
         return self.session_id
 
+    def ping(self):
+        url = self.base_url + "ping"
+        contents = self.get(url, auth = False)
+        return contents
+
+    def login(self, username, password):
+        url = self.base_url + "login"
+        contents = self.post(
+            url,
+            params = dict(
+                username = username,
+                password = password
+            ),
+            auth = False
+        )
+        return contents
+
     @property
     def oauth_types(self):
         return ("param",)
