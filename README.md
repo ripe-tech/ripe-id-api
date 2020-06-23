@@ -1,4 +1,4 @@
-# RIPE ID API
+<h1><a href="https://id.platforme.com"><img src="res/logo.svg" alt="RIPE ID API" height="60" style="height: 60px;"></a></h1>
 
 Simple Python API client for RIPE ID.
 
