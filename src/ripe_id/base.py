@@ -14,19 +14,12 @@ RIPEID_LOGIN_URL = "https://id.platforme.com/"
 """ The default login URL to be used when no other
 base URL value is provided to the constructor """
 
-SCOPE = (
-    "account.me",
-    "account.acl"
-)
+SCOPE = ("account.me", "account.acl")
 """ The list of permissions to be used to create the
 scope string for the oauth value """
 
-class API(
-    appier.OAuth2API,
-    token.TokenAPI,
-    account.AccountAPI
-):
 
+class API(appier.OAuth2API, token.TokenAPI, account.AccountAPI):
     def __init__(self, *args, **kwargs):
         appier.OAuth2API.__init__(self, *args, **kwargs)
         self.base_url = appier.conf("RIPEID_BASE_URL", RIPEID_BASE_URL)
@@ -48,33 +41,36 @@ class API(
         self,
         method,
         url,
-        data = None,
-        data_j = None,
-        data_m = None,
-        headers = None,
-        params = None,
-        mime = None,
-        kwargs = None
+        data=None,
+        data_j=None,
+        data_m=None,
+        headers=None,
+        params=None,
+        mime=None,
+        kwargs=None,
     ):
         appier.OAuth2API.build(
             self,
             method,
             url,
-            data = data,
-            data_j = data_j,
-            data_m = data_m,
-            headers = headers,
-            params = params,
-            mime = mime,
-            kwargs = kwargs
+            data=data,
+            data_j=data_j,
+            data_m=data_m,
+            headers=headers,
+            params=params,
+            mime=mime,
+            kwargs=kwargs,
         )
         auth = kwargs.pop("auth", True)
-        if auth: params["sid"] = self.get_session_id()
+        if auth:
+            params["sid"] = self.get_session_id()
 
     def get_session_id(self):
-        if self.session_id: return self.session_id
+        if self.session_id:
+            return self.session_id
         return self.oauth_login()
 
+    # pylint: disable-next=method-hidden
     def auth_callback(self, params, headers):
         if self.refresh_token:
             self.oauth_refresh()
@@ -84,20 +80,17 @@ class API(
             session_id = self.get_session_id()
             params["sid"] = session_id
 
-    def oauth_authorize(self, state = None):
+    def oauth_authorize(self, state=None):
         url = self.login_url + "oauth2/auth"
-        appier.verify_many((
-            self.client_id,
-            self.redirect_url,
-            self.scope
-        ))
+        appier.verify_many((self.client_id, self.redirect_url, self.scope))
         values = dict(
-            client_id = self.client_id,
-            redirect_uri = self.redirect_url,
-            response_type = "code",
-            scope = " ".join(self.scope)
+            client_id=self.client_id,
+            redirect_uri=self.redirect_url,
+            response_type="code",
+            scope=" ".join(self.scope),
         )
-        if state: values["state"] = state
+        if state:
+            values["state"] = state
         data = appier.legacy.urlencode(values)
         url = url + "?" + data
         return url
@@ -106,13 +99,13 @@ class API(
         url = self.login_url + "oauth2/token"
         contents = self.post(
             url,
-            token = False,
-            auth = False,
-            client_id = self.client_id,
-            client_secret = self.client_secret,
-            grant_type = "authorization_code",
-            redirect_uri = self.redirect_url,
-            code = code
+            token=False,
+            auth=False,
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            grant_type="authorization_code",
+            redirect_uri=self.redirect_url,
+            code=code,
         )
         self.access_token = contents["access_token"]
         self.refresh_token = contents.get("refresh_token", None)
@@ -124,14 +117,14 @@ class API(
         url = self.login_url + "oauth2/token"
         contents = self.post(
             url,
-            callback = False,
-            token = False,
-            auth = False,
-            client_id = self.client_id,
-            client_secret = self.client_secret,
-            grant_type = "refresh_token",
-            redirect_uri = self.redirect_url,
-            refresh_token = self.refresh_token
+            callback=False,
+            token=False,
+            auth=False,
+            client_id=self.client_id,
+            client_secret=self.client_secret,
+            grant_type="refresh_token",
+            redirect_uri=self.redirect_url,
+            refresh_token=self.refresh_token,
         )
         self.access_token = contents["access_token"]
         self.trigger("access_token", self.access_token)
@@ -139,7 +132,7 @@ class API(
 
     def oauth_login(self):
         url = self.login_url + "oauth2/login"
-        contents = self.post(url, callback = False, token = True, auth = False)
+        contents = self.post(url, callback=False, token=True, auth=False)
         self.session_id = contents.get("session_id", None)
         self.tokens = contents.get("tokens", None)
         self.trigger("auth", contents)
@@ -147,18 +140,13 @@ class API(
 
     def ping(self):
         url = self.base_url + "ping"
-        contents = self.get(url, auth = False)
+        contents = self.get(url, auth=False)
         return contents
 
     def login(self, username, password):
         url = self.base_url + "login"
         contents = self.post(
-            url,
-            params = dict(
-                username = username,
-                password = password
-            ),
-            auth = False
+            url, params=dict(username=username, password=password), auth=False
         )
         return contents
 
